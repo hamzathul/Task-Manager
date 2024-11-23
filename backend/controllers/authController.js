@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import generateTokenAndSetCookie from "../utils/generateToken.js";
 
 const register = async (req, res) => {
   const { username, email, password } = req.body;
@@ -8,35 +9,53 @@ const register = async (req, res) => {
     return res.status(400).json({ message: "Missing fields" });
 
   try {
+    const user = await User.findOne({ username });
+    if (user) {
+      return res.status(400).json({ error: "Username already exists" });
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({
+    const newUser = new User({
       username,
       email,
       password: hashedPassword,
     });
-    res.status(201).json({ message: "User registered" });
+    if (newUser) {
+      //GENERATE JWT token here
+      generateTokenAndSetCookie(newUser._id, res);
+
+      await newUser.save();
+
+      res.status(201).json({ message: "User registered successfully" });
+    } else {
+      res.status(400).json({ error: "Invalid user data" });
+    }
   } catch (error) {
-    res.status(500).json({ error });
+    console.log("Error in signup controller", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password)
+  const { username, password } = req.body;
+  if (!username || !password)
     return res.status(400).json({ message: "Missing fields" });
 
   try {
-    const user = await User.findOne({ email });
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(401).json({ message: "Invalid credentials" });
-    }
+    const user = await User.findOne({ username });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
-    res.json({ token });
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      user?.password || ""
+    );
+    if (!user || !isPasswordCorrect) {
+      return res.status(400).json({ error: "Invalid username or password" });
+    }
+    generateTokenAndSetCookie(user._id, res);
+
+    res.status(200).json({ message: "Login successful" });
   } catch (error) {
-    res.status(500).json({ error });
+    console.log("Error in login controller", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
