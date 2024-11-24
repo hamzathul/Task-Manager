@@ -58,7 +58,11 @@ const login = async (req, res) => {
     }
     generateTokenAndSetCookie(user._id, res);
 
-    res.status(200).json({ message: "Login successful" });
+    // Remove password before sending user data
+    const userResponse = user.toObject();
+    delete userResponse.password;
+
+    res.status(200).json({ user:userResponse, message: "Login successful" });
   } catch (error) {
     console.log("Error in login controller", error.message);
     res.status(500).json({ error: "Internal Server Error" });

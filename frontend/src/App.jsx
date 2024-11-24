@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 
 import Signup from "./pages/Signup"
 import { Route, Routes } from "react-router-dom";
+import Login from "./pages/Login";
 
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
   return (
     <Routes>
       <Route path="/signup" element={<Signup />} />
+      <Route path="/login" element={<Login />} />
     </Routes>
   );
 }
