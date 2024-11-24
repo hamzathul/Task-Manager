@@ -25,7 +25,13 @@ const register = async (req, res) => {
 
       await newUser.save();
 
-      res.status(201).json({ message: "User registered successfully" });
+      // Remove password before sending user data
+      const userResponse = newUser.toObject();
+      delete userResponse.password;
+
+      res
+        .status(201)
+        .json({ user: userResponse, message: "User registered successfully" });
     } else {
       res.status(400).json({ error: "Invalid user data" });
     }
