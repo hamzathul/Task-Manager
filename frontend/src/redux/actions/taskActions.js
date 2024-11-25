@@ -15,7 +15,7 @@ export const fetchTasks =
     try {
       dispatch(fetchTasksStart());
       const queryString = new URLSearchParams(filters).toString();
-      const { data } = await axios.get(`/api/tasks?${queryString}`);
+      const { data } = await axios.get(`/filter?${queryString}`);
       dispatch(fetchTasksSuccess(data));
     } catch (error) {
       dispatch(

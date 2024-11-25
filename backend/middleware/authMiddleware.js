@@ -26,7 +26,7 @@ const protect = async (req, res, next) => {
     req.user = user;
 
     next();
-  } catch (err) {
+  } catch (error) {
      console.log("Error in protected route middleware:", error.message);
      res.status(500).json({ error: "Internal server error" });
   }

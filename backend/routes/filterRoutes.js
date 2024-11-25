@@ -1,31 +1,32 @@
 import express from 'express'
 import protect from '../middleware/authMiddleware.js'
+import Task from '../models/Task.js';
 
 const router = express.Router()
 
-router.get("/filter", protect, async (req, res) => {
-  const { status, startDate, endDate } = req.query;
-
+router.get("/", protect, async (req, res) => {
   try {
-    const filterCriteria = { userId: req.user._id };
+    // Extract filters from query parameters
+    const { status, category, date } = req.query;
 
-    // Add status filter if provided
-    if (status) {
-      filterCriteria.status = status;
+    // Build the query object dynamically
+    const query = {};
+    if (status) query.status = status;
+    if (category) query.category = category;
+    if (date) {
+      const startOfDay = new Date(date);
+      const endOfDay = new Date(date);
+      endOfDay.setHours(23, 59, 59, 999);
+      query.deadline = { $gte: startOfDay, $lte: endOfDay };
     }
 
-    // Add date range filter if provided
-    if (startDate && endDate) {
-      filterCriteria.dueDate = {
-        $gte: new Date(startDate),
-        $lte: new Date(endDate),
-      };
-    }
+    // Fetch tasks based on the query
+    const tasks = await Task.find(query);
 
-    const tasks = await Task.find(filterCriteria);
-    res.json(tasks);
+    res.status(200).json(tasks);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching filtered tasks", error });
+    console.error("Error fetching tasks:", error);
+    res.status(500).json({ message: "Failed to fetch tasks" });
   }
 });
 
