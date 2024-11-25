@@ -29,7 +29,7 @@ export const fetchTasks =
 // Add a new task
 export const createTask = (taskData) => async (dispatch) => {
   try {
-    const { data } = await axios.post("/api/tasks", taskData);
+    const { data } = await axios.post("/tasks", taskData);
     dispatch(addTask(data));
   } catch (error) {
     console.error(error.response?.data?.message || "Error creating task");
