@@ -15,12 +15,12 @@ const TaskList = ({ title, tasks, onUpdate, onDelete }) => {
             <p className="text-sm text-gray-400">Due: {task.dueDate}</p>
           </div>
           <div>
-            <button
+            {task.status !== "In Progress" && <button
               onClick={() => onUpdate(task._id, { status: "In Progress" })}
               className="bg-blue-600 px-4 py-2 rounded-lg text-sm mr-2"
             >
               Move to In Progress
-            </button>
+            </button>}
             <button
               onClick={() => onDelete(task._id)}
               className="bg-red-600 px-4 py-2 rounded-lg text-sm"
