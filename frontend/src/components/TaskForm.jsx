@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-const TaskForm = ({ onSubmit }) => {
+const TaskForm = ({ onSubmit, initialData = {}, isEditMode = false }) => {
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    category: "",
-    dueDate: "",
+    title: initialData.title || "",
+    description: initialData.description || "",
+    category: initialData.category || "",
+    dueDate: initialData.dueDate || "",
   });
 
   const handleChange = (e) => {
@@ -14,7 +14,7 @@ const TaskForm = ({ onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit(formData); // Pass updated data to parent
     setFormData({
       title: "",
       description: "",
@@ -80,7 +80,7 @@ const TaskForm = ({ onSubmit }) => {
         type="submit"
         className="w-full py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white font-semibold transition"
       >
-        Add Task
+        {isEditMode ? "Update Task" : "Add Task"}
       </button>
     </form>
   );

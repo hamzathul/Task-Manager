@@ -22,9 +22,6 @@ router.get("/", protect, async (req, res) => {
       const endOfDay = new Date(targetDate);
       endOfDay.setHours(23, 59, 59, 999);
 
-      console.log("Start of day:", startOfDay);
-      console.log("End of day:", endOfDay);
-
       query.dueDate = {
         $gte: startOfDay,
         $lte: endOfDay,
@@ -33,7 +30,6 @@ router.get("/", protect, async (req, res) => {
 
     // Fetch tasks based on the query
     const tasks = await Task.find(query);
-    console.log(tasks)  
 
     res.status(200).json(tasks);
   } catch (error) {

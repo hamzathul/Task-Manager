@@ -1,6 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
+import TaskForm from "./TaskForm";
 
 const TaskList = ({ title, tasks, onUpdate, onDelete }) => {
+  const [editingTask, setEditingTask] = useState(null);
+
+  const handleEdit = (task) => {
+    setEditingTask(task); // Set the task to be edited
+  };
+
+  const handleUpdate = (updatedData) => {
+    onUpdate(editingTask._id, updatedData); // Dispatch the update action
+    setEditingTask(null); // Reset editing state
+  };
+
   return (
     <div className="bg-gray-800 p-4 rounded-lg shadow-md">
       <h2 className="text-xl font-bold mb-4">{title}</h2>
@@ -23,6 +35,12 @@ const TaskList = ({ title, tasks, onUpdate, onDelete }) => {
             </p>
           </div>
           <div>
+            <button
+              onClick={() => handleEdit(task)}
+              className="bg-yellow-600 px-4 py-2 rounded-lg text-sm mr-2"
+            >
+              Edit
+            </button>
             {task.status !== "In Progress" && (
               <button
                 onClick={() => onUpdate(task._id, { status: "In Progress" })}
@@ -50,6 +68,15 @@ const TaskList = ({ title, tasks, onUpdate, onDelete }) => {
           </div>
         </div>
       ))}
+
+      {/* Show Edit Form if editingTask is set */}
+      {editingTask && (
+        <TaskForm
+          onSubmit={handleUpdate}
+          initialData={editingTask} // Pass the task to prefill
+          isEditMode={true}
+        />
+      )}
     </div>
   );
 };
