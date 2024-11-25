@@ -14,14 +14,26 @@ router.get("/", protect, async (req, res) => {
     if (status) query.status = status;
     if (category) query.category = category;
     if (date) {
-      const startOfDay = new Date(date);
-      const endOfDay = new Date(date);
+      const targetDate = new Date(date);
+
+      const startOfDay = new Date(targetDate);
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date(targetDate);
       endOfDay.setHours(23, 59, 59, 999);
-      query.deadline = { $gte: startOfDay, $lte: endOfDay };
+
+      console.log("Start of day:", startOfDay);
+      console.log("End of day:", endOfDay);
+
+      query.dueDate = {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      };
     }
 
     // Fetch tasks based on the query
     const tasks = await Task.find(query);
+    console.log(tasks)  
 
     res.status(200).json(tasks);
   } catch (error) {

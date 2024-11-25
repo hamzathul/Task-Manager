@@ -36,7 +36,7 @@ const Dashboard = () => {
         <TaskForm onSubmit={(taskData) => dispatch(createTask(taskData))} />
 
         {/* Filters */}
-        <div className="flex justify-between items-center gap-4 my-6">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 my-6">
           <select
             name="status"
             onChange={handleFilterChange}
