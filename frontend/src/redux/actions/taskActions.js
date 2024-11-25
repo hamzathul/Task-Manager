@@ -39,7 +39,7 @@ export const createTask = (taskData) => async (dispatch) => {
 // Update an existing task
 export const updateTask = (taskId, updateData) => async (dispatch) => {
   try {
-    const { data } = await axios.put(`/api/tasks/${taskId}`, updateData);
+    const { data } = await axios.put(`/tasks/${taskId}`, updateData);
     dispatch(updateTaskAction({ id: taskId, data }));
   } catch (error) {
     console.error(error.response?.data?.message || "Error updating task");
@@ -49,7 +49,7 @@ export const updateTask = (taskId, updateData) => async (dispatch) => {
 // Delete a task
 export const deleteTask = (taskId) => async (dispatch) => {
   try {
-    await axios.delete(`/api/tasks/${taskId}`);
+    await axios.delete(`/tasks/${taskId}`);
     dispatch(deleteTaskAction(taskId));
   } catch (error) {
     console.error(error.response?.data?.message || "Error deleting task");
