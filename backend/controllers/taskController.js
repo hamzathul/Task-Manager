@@ -10,7 +10,7 @@ const getTasks = async (req, res) => {
 };
 
 const createTask = async (req, res) => {
-  const { title, description, dueDate } = req.body;
+  const { title, description, dueDate, category } = req.body;
   if (!title) return res.status(400).json({ message: "Title is required" });
 
   try {
