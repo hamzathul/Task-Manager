@@ -10,7 +10,7 @@ router.get("/", protect, async (req, res) => {
     const { status, category, date } = req.query;
 
     // Build the query object dynamically
-    const query = {};
+    const query = { userId: req.user._id };
     if (status) query.status = status;
     if (category) query.category = category;
     if (date) {
