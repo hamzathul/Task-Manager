@@ -11,7 +11,6 @@ import { checkAuth } from "./redux/actions/authActions";
 function App() {
   const dispatch = useDispatch();
   const { user, loading } = useSelector((state) => state.auth);
-  console.log(user)
 
   useEffect(() => {
     dispatch(checkAuth()); // Check authentication on page load

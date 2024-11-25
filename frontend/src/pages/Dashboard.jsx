@@ -27,6 +27,11 @@ const Dashboard = () => {
     setFilter({ ...filter, [e.target.name]: e.target.value });
   };
 
+  // Timeline like sorting
+  const sortedTasks = [...tasks].sort(
+    (a, b) => new Date(a.dueDate) - new Date(b.dueDate)
+  );
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-start bg-gradient-to-br from-gray-800 to-gray-900 text-white">
       <div className="w-full max-w-5xl p-8">
@@ -71,19 +76,19 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
           <TaskList
             title="To Do"
-            tasks={tasks.filter((task) => task.status === "To Do")}
+            tasks={sortedTasks.filter((task) => task.status === "To Do")}
             onUpdate={(taskId, data) => dispatch(updateTask(taskId, data))}
             onDelete={(taskId) => dispatch(deleteTask(taskId))}
           />
           <TaskList
             title="In Progress"
-            tasks={tasks.filter((task) => task.status === "In Progress")}
+            tasks={sortedTasks.filter((task) => task.status === "In Progress")}
             onUpdate={(taskId, data) => dispatch(updateTask(taskId, data))}
             onDelete={(taskId) => dispatch(deleteTask(taskId))}
           />
           <TaskList
             title="Completed"
-            tasks={tasks.filter((task) => task.status === "Completed")}
+            tasks={sortedTasks.filter((task) => task.status === "Completed")}
             onUpdate={(taskId, data) => dispatch(updateTask(taskId, data))}
             onDelete={(taskId) => dispatch(deleteTask(taskId))}
           />
