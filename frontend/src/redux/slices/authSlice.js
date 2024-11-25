@@ -15,10 +15,12 @@ const authSlice = createSlice({
     AUTH_SUCCESS: (state, action) => {
       state.loading = false;
       state.user = action.payload;
+      console.log(state.user)
     },
     AUTH_FAIL: (state, action) => {
       state.loading = false;
       state.error = action.payload;
+      state.user = null;
     },
   },
 });
